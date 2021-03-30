@@ -283,7 +283,7 @@ int main(int argc, char* argv[]) {
 	for (int k = 1; k <= K; k++) {
 		lazy[k] /= nruns;
 		fixed[k] /= nruns;
-		moving[k] /= nruns;
+		// moving[k] /= nruns;
 		window[k] /= nruns;
 
 		cout << "k = " << k << endl;

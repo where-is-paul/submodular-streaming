@@ -17,15 +17,15 @@ protected:
 	// Window size and cardinality constraint
 	// The "time" parameter is how many elements have been added so far.
 	// Used for generating unique ids.
-	size_t m_wsize, m_k, m_time;
+	size_t m_k, m_time;
 	shared_ptr<VectorCache> m_cache;
 public:
 	BaseStreamer() {
 		m_cache = make_shared<VectorCache>();
 	}
 
-	BaseStreamer(size_t wsize, size_t k, MetricEvaluator* metric = nullptr) 
-	: m_wsize(wsize), m_k(k), m_time(0) {
+	BaseStreamer(size_t k, MetricEvaluator* metric = nullptr) 
+	: m_k(k), m_time(0) {
 		m_cache = make_shared<VectorCache>(metric);
 	}
 

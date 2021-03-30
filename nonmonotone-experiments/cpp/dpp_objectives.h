@@ -38,6 +38,10 @@ public:
 		return m_value;
 	}
 
+	void set_cache(shared_ptr<VectorCache> cache) {
+		m_cache = cache;
+	}
+
 	// Clears the solution but does not clear the cache.
 	void clear() {
 		m_L.clear();

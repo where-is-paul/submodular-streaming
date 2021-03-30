@@ -1,14 +1,21 @@
-#ifndef _RANDOM_GREEDY_STREAMER_H
-#define _RANDOM_GREEDY_STREAMER_H
+#ifndef _MULTI_LEVEL_STREAMER_H
+#define _MULTI_LEVEL_STREAMER_H
 
 #include "base_streamer.h"
 
 #include <algorithm>
 
-class RandomGreedyStreamer : public BaseStreamer {
-	MAPObjective m_obj;
+class MultiLevelStreamer : public BaseStreamer {
+	// Stores the historical solutions for every single window
+	// This uses more memory than the algorithm in the paper.
+	// We do it this way because we're comparing the approximation
+	// ratio only, and this algorithm is much easier to implement and 
+	// has the same approximation.
+	map<int, vector<MAPObjective>> m_obj;
+	const double ALPHA = 10;
+
 public:
-	RandomGreedyStreamer(size_t k, MetricEvaluator* metric = nullptr) 
+	MultiLevelStreamer(size_t k, MetricEvaluator* metric = nullptr) 
 	: BaseStreamer(k, metric), m_obj(m_cache) {
 	}
 
@@ -24,7 +31,9 @@ public:
 		m_obj.clear();
 		while (m_obj.length() < m_k) {
 			vector<pair<double, int>> sorted_marginals;
-			for (size_t id = 0; id < m_time; id++) {
+			for (size_t i = 1; i <= m_wsize; i++) {
+				if (m_time < i) break;
+				size_t id = m_time - i;
 				double val = m_obj.marginal(id);
 				sorted_marginals.push_back({val, id});
 			}

@@ -6,8 +6,8 @@
 class GreedyStreamer : public BaseStreamer {
 	MAPObjective m_obj;
 public:
-	GreedyStreamer(size_t wsize, size_t k, MetricEvaluator* metric = nullptr) 
-	: BaseStreamer(wsize, k, metric), m_obj(m_cache) {
+	GreedyStreamer(size_t k, MetricEvaluator* metric = nullptr) 
+	: BaseStreamer(k, metric), m_obj(m_cache) {
 	}
 
 	// Returns true if element was accepted into the cache,
@@ -15,9 +15,6 @@ public:
 	bool add(const vector<double>& elt) {
 		m_cache->add(m_time, elt);
 		m_time++;
-		if (m_time > m_wsize) {
-			m_cache->remove(m_time - m_wsize - 1);
-		}
 		return true;
 	}
 
@@ -26,9 +23,7 @@ public:
 		while (m_obj.length() < m_k) {
 			double best_marginal = -1;
 			size_t best_id = 0;
-			for (size_t i = 1; i <= m_wsize; i++) {
-				if (m_time < i) break;
-				size_t id = m_time - i;
+			for (size_t id = 0; id < m_time,; id++) {
 				double val = m_obj.marginal(id);
 				if (val > best_marginal) {
 					best_marginal = val;
