@@ -19,7 +19,7 @@ class MAPObjective {
 	double m_value; // Current solution value
 
 	// Epsilon value for floating point comparisons
-	static constexpr double EPS = 1e-12;
+	static constexpr double EPS = 1e-6;
 
 public:
 	MAPObjective(shared_ptr<VectorCache> cache) : m_cache(cache), m_n(0), m_value(0) {

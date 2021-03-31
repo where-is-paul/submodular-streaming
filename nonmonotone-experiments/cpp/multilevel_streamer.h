@@ -14,7 +14,7 @@ class MultiLevelStreamer : public BaseStreamer {
 	// ratio only, and this algorithm is much easier to implement and 
 	// has the same approximation.
 	vector<vector<MAPObjective>> m_obj;
-	const double ALPHA = 42;
+	const double ALPHA = 8;
 
 public:
 	MultiLevelStreamer(size_t k, MetricEvaluator* metric = nullptr) 
@@ -68,6 +68,7 @@ public:
 							double val = m_obj[k][l].marginal(id);
 							if (val > m_obj[k][l+1].value() - m_obj[k][l].value()) {
 								taken = true;
+								break;
 							}
 						}
 
@@ -78,7 +79,7 @@ public:
 					q[j] = (ALPHA * m_k - j + A) / double(ALPHA * m_k);
 				}
 				if (flip() <= q[i]) {
-					C.push_back(i);
+					C.push_back(id);
 				}
 			}
 

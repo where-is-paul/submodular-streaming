@@ -73,33 +73,44 @@ int main(int argc, char* argv[]) {
 
 	//////////////////////////////////////////////
 
-	N = 1000;
-	K = 10;
-	GreedyStreamer gstream(K, metric);
-	RandomGreedyStreamer rstream(K, metric);
-	MultiLevelStreamer mstream(K, metric);
+	N = 100;
+	for (int trials = 0; trials < 10; trials++) {
+		for (int K_ = 1; K_ <= 10; K_++) {
+			K = K_;
+			GreedyStreamer gstream(K, metric);
+			RandomGreedyStreamer rstream(K, metric);
+			MultiLevelStreamer mstream(K, metric);
 
-	cout << "***Sequential model tests***" << endl;
-	auto tgi = chrono::steady_clock::now();
-	for (size_t i = 0; i < N; i++) {
-		gstream.add(source->data_at(i));
-		rstream.add(source->data_at(i));
-		mstream.add(source->data_at(i));
+			// cout << "***Sequential model tests***" << endl;
+			// auto tgi = chrono::steady_clock::now();
+
+			vector<int> p(N);
+			iota(p.begin(), p.end(), 0);
+			random_shuffle(p.begin(), p.end());
+			for (size_t j = 0; j < N; j++) {
+				int i = p[j];
+				gstream.add(source->data_at(i));
+				rstream.add(source->data_at(i));
+				mstream.add(source->data_at(i));
+			}
+
+			// cout << "Items added successfully." << endl;
+			// cout << "The greedy objective is: " << gstream.query() << endl;
+			// cout << "The random greedy objective is: " << rstream.query() << endl;
+			// cout << "The multi-level objective is: " << mstream.query() << endl;
+			cout << K << " " << gstream.query() << " " << rstream.query() << " " << mstream.query() << endl;
+			// auto tgf = chrono::steady_clock::now();
+			// cout << "Total time: " << chrono::duration_cast<chrono::microseconds>(tgf - tgi).count() << " µs" << endl;
+			// cerr << "Sanity check, final solution length: " << gstream.solution().size() << " "
+			// 	 << rstream.solution().size() << " "
+			// 	 << mstream.solution().size() << endl; 
+		}
+		// cout << "Solution: ";
+		// for (int x : gstream.solution()) {
+		// 	cout << x << " ";
+		// }
+		// cout << endl;
 	}
-
-	cout << "Items added successfully." << endl;
-	cout << "The greedy objective is: " << gstream.query() << endl;
-	cout << "The random greedy objective is: " << rstream.query() << endl;
-	cout << "The multi-level objective is: " << mstream.query() << endl;
-
-	auto tgf = chrono::steady_clock::now();
-	cout << "Total time: " << chrono::duration_cast<chrono::microseconds>(tgf - tgi).count() << " µs" << endl;
-	// cout << "Solution: ";
-	// for (int x : gstream.solution()) {
-	// 	cout << x << " ";
-	// }
-	// cout << endl;
-
 	//////////////////////////////////////////////
 
 	// string alg[] = {"greedy", "max-trace", "windowed"};
