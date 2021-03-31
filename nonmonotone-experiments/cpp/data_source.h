@@ -3,6 +3,7 @@
 
 #include <random>
 #include <memory>
+#include <filesystem>
 
 using namespace std;
 
@@ -97,6 +98,7 @@ class BinarySource : public BaseSource {
 	size_t m_length, m_dim, m_vector_bytes, m_lastpos;
 	ifstream m_binary_file;
 	unique_ptr<char> m_data_buffer;
+
 public:
 	BinarySource(string filename) {
 		// Read the file into a list of vectors and store it in memory
@@ -108,10 +110,12 @@ public:
 		size_t N, K, W, DIM;
 		stringstream ss(header);
 		ss >> type >> N >> K >> W >> DIM;
-
 		string binary_path;
 		config_file >> binary_path;
-		m_binary_file.open(binary_path, ios::in | ios::binary);
+		
+		filesystem::path p(filename);
+		string binary_filename = p.remove_filename().string() + binary_path;
+		m_binary_file.open(binary_filename, ios::in | ios::binary);
 
 		m_length = N;
 		m_dim = DIM;

@@ -12,14 +12,14 @@
  */
 class MAPObjective {
 	vector<vector<double>> m_L; // Current triangular factors of I+K
-								// (I is identity, K is the current DPP kernel)
+								// (I = identity, K = DPP kernel)
 	vector<size_t> m_stored_ids; // Current stored vectors (by id)
 	shared_ptr<VectorCache> m_cache; // Cache for transforming id->vector
 	size_t m_n; // Current dimension of kernel
 	double m_value; // Current solution value
 
 	// Epsilon value for floating point comparisons
-	const double EPS = 1e-12;
+	static constexpr double EPS = 1e-12;
 
 public:
 	MAPObjective(shared_ptr<VectorCache> cache) : m_cache(cache), m_n(0), m_value(0) {

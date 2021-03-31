@@ -41,9 +41,5 @@ public:
 		query();
 		return m_obj.ids();
 	}
-
-	size_t size() {
-		return min(m_cache->size(), m_k);
-	}
 };
 #endif

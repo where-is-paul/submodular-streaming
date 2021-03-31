@@ -23,7 +23,7 @@ public:
 		while (m_obj.length() < m_k) {
 			double best_marginal = -1;
 			size_t best_id = 0;
-			for (size_t id = 0; id < m_time,; id++) {
+			for (size_t id = 0; id < m_time; id++) {
 				double val = m_obj.marginal(id);
 				if (val > best_marginal) {
 					best_marginal = val;
@@ -39,10 +39,6 @@ public:
 		// Call query first to populate the solution
 		query();
 		return m_obj.ids();
-	}
-
-	size_t size() {
-		return min(m_cache->size(), m_k);
 	}
 };
 #endif

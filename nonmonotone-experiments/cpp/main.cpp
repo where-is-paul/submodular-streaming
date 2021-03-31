@@ -12,7 +12,7 @@
 #include "data_source.h"
 #include "greedy_streamer.h"
 #include "random_greedy_streamer.h"
-//#include "multilevel_streamer.h"
+#include "multilevel_streamer.h"
 
 using namespace std;
 
@@ -40,6 +40,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	ifstream config_file(filename);
+	cerr << filename << endl;
 	size_t N, K, W, DIM;
 	string type, header;
 	
@@ -64,6 +65,7 @@ int main(int argc, char* argv[]) {
 		metric = new GeodistanceMetric;
 	} else if (type == "binary") {
 		source = new BinarySource(filename);
+		cerr << "Done setting up source" << endl;
 		metric = new SimilarityMetric;
 	} else {
 		assert(false && "Unknown problem type!");
@@ -71,21 +73,24 @@ int main(int argc, char* argv[]) {
 
 	//////////////////////////////////////////////
 
-	N = 100;
+	N = 1000;
 	K = 10;
-	GreedyStreamer gstream(N, K, metric);
-	RandomGreedyStreamer rstream(N, K, metric);
+	GreedyStreamer gstream(K, metric);
+	RandomGreedyStreamer rstream(K, metric);
+	MultiLevelStreamer mstream(K, metric);
 
 	cout << "***Sequential model tests***" << endl;
 	auto tgi = chrono::steady_clock::now();
 	for (size_t i = 0; i < N; i++) {
 		gstream.add(source->data_at(i));
 		rstream.add(source->data_at(i));
+		mstream.add(source->data_at(i));
 	}
 
 	cout << "Items added successfully." << endl;
 	cout << "The greedy objective is: " << gstream.query() << endl;
 	cout << "The random greedy objective is: " << rstream.query() << endl;
+	cout << "The multi-level objective is: " << mstream.query() << endl;
 
 	auto tgf = chrono::steady_clock::now();
 	cout << "Total time: " << chrono::duration_cast<chrono::microseconds>(tgf - tgi).count() << " µs" << endl;
